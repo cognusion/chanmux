@@ -24,13 +24,19 @@ func (c *ChanMux) AddChan(newChan chan interface{}) {
 
 }
 
-// Finalize will close the sink when the muxes have all exited
+// Finalize will return immediately. and close the sink when the muxes have all exited
 func (c *ChanMux) Finalize() {
 	go func() {
 		// Block until everyone is done, and then close the sink
 		c.wg.Wait()
 		close(c.sink)
 	}()
+}
+
+// Wait will block until all the muxes have exited, close the sink, and then return
+func (c *ChanMux) Wait() {
+	c.wg.Wait()
+	close(c.sink)
 }
 
 // NewChanMux accepts a channel to write to, and returns a *ChanMux

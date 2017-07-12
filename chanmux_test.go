@@ -45,7 +45,7 @@ func TestChanWG(t *testing.T) {
 // Creates 200 channels, adds them to the ChanMux,
 // sends them unique strings, and ranges over the
 // aggregate
-func Example_ChanMux() {
+func ExampleChanMux() {
 	msize := 200
 	noise := make(chan interface{})
 

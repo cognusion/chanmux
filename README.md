@@ -3,11 +3,12 @@ Multiplex incoming channels into an outgoing channel.
 You're probably doing something wrong if you need this. 
 But if not, here it is.
 
-The reason you might not be doing it wrong, is that you've decided that giving an unknown number of goros their own 
+The reason you _might_ not be doing it wrong, is that you've decided that giving an unknown number of goros their own 
 individual channels allows them to bettern communicate when they're done (by closing their channel) than by passing multiple
 channels, or having some kind of channel protocol, or assigning names to your goros and keeping score. Benchmarks (included) show 
 it's hella fast and, again, doesn't require advanced knowledge of goro counts.
 
+[![GoDoc](https://godoc.org/github.com/cognusion/chanmux?status.svg)](https://godoc.org/github.com/cognusion/chanmux)
 
 ```go
 package main

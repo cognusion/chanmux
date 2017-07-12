@@ -50,9 +50,10 @@ func main() {
 
 There are some other ways of doing this, that I've since found, using reflection (See ReflectSelect), or more 
 goros (See GoSelect). I added some benchmarks for those (sourced elsewhere, see source for attribution) and ChanMux 
-is still much much faster (ChanMux1k is roughly the scale that the others are tested at). Of interest, is that if 
-allocs are an issue (heap problems) the GoSelec issue manages a super small number of allocation, which may be worth 
-the performance hit.
+is still much much faster (ChanMux1k is roughly the scale that the others are tested at), and more dynamic regardless. 
+
+Of interest, is that if allocs are an issue (heap problems) the GoSelect scheme manages a super small number of 
+allocations, which may be worth the performance hit and initial sizing requirements.
 
 
 ```

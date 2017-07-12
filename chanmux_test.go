@@ -122,7 +122,7 @@ func testChan(msize int) int {
 		return msize
 	}
 
-	noise := make(chan interface{})
+	noise := make(chan interface{}, msize)
 
 	for i := 0; i < msize; i++ {
 		go func(x int, c chan interface{}) {
@@ -147,7 +147,7 @@ func testChanWG(msize int) int {
 	}
 
 	var wg sync.WaitGroup
-	noise := make(chan interface{})
+	noise := make(chan interface{}, msize)
 
 	wg.Add(msize)
 
@@ -177,12 +177,12 @@ func testChanMux(msize int) int {
 		return msize
 	}
 
-	noise := make(chan interface{})
+	noise := make(chan interface{}, msize)
 
 	m := NewChanMux(noise)
 
 	for i := 0; i < msize; i++ {
-		newChan := make(chan interface{})
+		newChan := make(chan interface{}, 1)
 		m.AddChan(newChan)
 		go func(x int, c chan interface{}) {
 			c <- fmt.Sprintf("OMG WHAT?! %d?!", x)

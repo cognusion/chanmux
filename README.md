@@ -48,7 +48,11 @@ func main() {
 
 ## Benchmarks
 
-There are some other ways of doing this, that I've since found, using reflection (See ReflectSelect), or more 
+Benchmarking 1thousand and 1million muxed channels (prefix _*_) compared to the static methods of raw channel iteration (prefix _-_)
+and raw channel iteration using Waitgroups (prefix _^_) shows that the mux outscales raw channel iteration, and isn't too shabby vs.
+the similar using WaitGroups.
+
+There are some other ways of doing this, that I've since found (prefix _+_ below), using reflection (See ReflectSelect), or more 
 goros (See GoSelect). I added some benchmarks for those (sourced elsewhere, see source for attribution) and ChanMux 
 is still much much faster (ChanMux1k is roughly the scale that the others are tested at), and more dynamic regardless. 
 
@@ -57,12 +61,13 @@ allocations, which may be worth the performance hit and initial sizing requireme
 
 
 ```
-BenchmarkChanMux1k-8       	    2000	    739115 ns/op	  141138 B/op	    4070 allocs/op
-BenchmarkChan1k-8          	    3000	    518314 ns/op	   40637 B/op	    3007 allocs/op
-BenchmarkChanWG1k-8        	    2000	    558017 ns/op	   41282 B/op	    3017 allocs/op
-BenchmarkChanMux1m-8       	       1	2810778448 ns/op	801630600 B/op	 7000792 allocs/op
-BenchmarkChan1m-8          	       2	 751543633 ns/op	95962060 B/op	 3499705 allocs/op
-BenchmarkChanWG1m-8        	       2	 789297487 ns/op	127953476 B/op	 3999592 allocs/op
-BenchmarkReflectSelect-8   	       1	1908793458 ns/op	922682896 B/op	10107239 allocs/op
-BenchmarkGoSelect-8        	      20	  68404865 ns/op	   11156 B/op	     108 allocs/op
+*BenchmarkChanMux1k-8       	    2000	    657259 ns/op	  169019 B/op	    5006 allocs/op
+-BenchmarkChan1k-8         	    5000	    302023 ns/op	   56760 B/op	    3004 allocs/op
+^BenchmarkChanWG1k-8        	    5000	    315627 ns/op	   57215 B/op	    3012 allocs/op
+*BenchmarkChanMux1m-8       	       2	 694727670 ns/op	184342996 B/op	 5002773 allocs/op
+-BenchmarkChan1m-8          	       1	2051025698 ns/op	578326880 B/op	 4014742 allocs/op
+^BenchmarkChanWG1m-8        	       5	 375152299 ns/op	80566953 B/op	 3121603 allocs/op
++BenchmarkReflectSelect-8   	       1	1725111094 ns/op	920304784 B/op	10068110 allocs/op
++BenchmarkGoSelect-8        	      20	  62888297 ns/op	   10964 B/op	     106 allocs/op
+
 ```

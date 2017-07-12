@@ -42,6 +42,36 @@ func TestChanWG(t *testing.T) {
 
 }
 
+// Creates 200 channels, adds them to the ChanMux,
+// sends them unique strings, and ranges over the
+// aggregate
+func Example_ChanMux() {
+	msize := 200
+	noise := make(chan interface{})
+
+	m := NewChanMux(noise)
+
+	// Create msize number of channels, adding them
+	// to the mux, sending them a string, and closing
+	// them thereafter
+	for i := 0; i < msize; i++ {
+		newChan := make(chan interface{})
+		m.AddChan(newChan)
+		newChan <- fmt.Sprintf("OMG WHAT?! %d?!", i)
+		close(newChan)
+	}
+
+	// If you don't care about ever closing noise,
+	// or are going to close it elsewhere, safely,
+	// you don't strictly need to Finalize
+	m.Finalize()
+
+	// Range over noise and print it
+	for n := range noise {
+		fmt.Printf("%s\n", n)
+	}
+}
+
 func BenchmarkChanMux1k(b *testing.B) {
 
 	b.StartTimer()

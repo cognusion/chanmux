@@ -4,42 +4,32 @@ import (
 	"fmt"
 	"sync"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestChanMux(t *testing.T) {
 
-	for i := 1; i < 1000; i++ {
-		c := testChanMux(i)
-
-		if c != i {
-			t.Errorf("Size was %d but had %d outputs\n", i, c)
+	Convey("When we incrementally complicate chans, the results are consistent", t, func() {
+		for i := 1; i < 1000; i++ {
+			c := testChan(i)
+			So(c, ShouldEqual, i)
 		}
-	}
+	})
 
-}
-
-func TestChan(t *testing.T) {
-
-	for i := 1; i < 1000; i++ {
-		c := testChan(i)
-
-		if c != i {
-			t.Errorf("Size was %d but had %d outputs\n", i, c)
+	Convey("When we incrementally complicate the mux, the results are consistent", t, func() {
+		for i := 1; i < 1000; i++ {
+			c := testChanMux(i)
+			So(c, ShouldEqual, i)
 		}
-	}
+	})
 
-}
-
-func TestChanWG(t *testing.T) {
-
-	for i := 1; i < 1000; i++ {
-		c := testChanWG(i)
-
-		if c != i {
-			t.Errorf("Size was %d but had %d outputs\n", i, c)
+	Convey("When we incrementally complicate the chan with WaitGroups, the results are consistent", t, func() {
+		for i := 1; i < 1000; i++ {
+			c := testChanWG(i)
+			So(c, ShouldEqual, i)
 		}
-	}
-
+	})
 }
 
 // Creates 200 channels, adds them to the ChanMux,
@@ -131,7 +121,7 @@ func testChan(msize int) int {
 	}
 
 	c := 0
-	for _ = range noise {
+	for range noise {
 		c++
 		if c >= msize {
 			close(noise)
@@ -164,7 +154,7 @@ func testChanWG(msize int) int {
 	}
 
 	c := 0
-	for _ = range noise {
+	for range noise {
 		c++
 	}
 
@@ -192,7 +182,7 @@ func testChanMux(msize int) int {
 	m.Finalize()
 
 	c := 0
-	for _ = range noise {
+	for range noise {
 		c++
 	}
 	return c
